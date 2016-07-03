@@ -1,0 +1,58 @@
+{% load staticfiles %}
+<html>
+<head>
+	<title></title>
+	<script src="https://code.jquery.com/jquery-3.0.0.js" integrity="sha256-jrPLZ+8vDxt2FnE1zvZXCkCcebI/C8Dt5xyaQBjxQIo=" crossorigin="anonymous"></script>
+	<link href = "{% static 'app/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Montserrat:700' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
+	<link href="{% static 'app/materialize-src/sass/materialize.css'%}" rel="stylesheet">
+	<script src="{% static 'app/materialize-src/js/bin/materialize.js'%}"></script>
+</head>
+<body>
+	<img src={% static "app/images/Elegant_Background-12.jpg" %}>
+	<style>
+		img {
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			left: 0px;
+			top: 0px;
+			z-index: -1;
+		}
+		p {
+			text-align: center;
+			padding-top: 3%;
+			font-size: 70px;
+			font-family: "Montserrat", sans-serif;
+			font-weight: bolder;
+			color: white;
+		}
+		#icon_prefix{
+			text-align: center;
+			padding-top: 3%;
+			font-size: 40px;
+			font-family: "Montserrat", sans-serif;
+			color: white;
+			font-weight: lighter;
+		}
+		label{
+			text-align: center;
+			padding-top: 3%;
+			font-size: 26px;
+			font-family: "Montserrat", sans-serif;
+			color: white;
+			font-weight: lighter;
+		}
+	</style>
+	<div style="height:45%;">
+		<a href="{% url 'home' %}"><p>VALAR DOWNLOADIS.</p></a>
+	</div>
+	<div class="row" >
+		<form class ="input-field col m8 s12 l10 offset-l1 offset-m2" action="http://127.0.0.1:8000/video/" method="GET">
+			<input id="icon_prefix" type="text" name="search">
+			<label for="icon_prefix" style="font-size:26px;color:#FFD3E2">Enter name of the Video</label>
+		</form>
+	</div>
+</body>
+</html>

@@ -3,17 +3,22 @@
 	margin: 0;
 	text-decoration: none;
 	list-style: none;
+
 	box-sizing: border-box;
 	/*background-color: rgba(10,10,10,0.1);*/
 }
 
+a {
+	color: inherit; 
+} 
+
 img {
 	width: 100%;
 	height: 100%;
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    z-index: -1;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	z-index: -1;
 }
 
 #p1 p{
@@ -65,7 +70,7 @@ img {
 
 #buttons2 div:hover { 
 	transform: scale(1.2);
-    background-color: rgba(37, 14, 14, 0.46);
+	background-color: rgba(37, 14, 14, 0.46);
 
 }
 #btn {
@@ -76,16 +81,16 @@ img {
 }
 
 #Home button{
- 	justify-content: center;
-    font-size: 20%;
-    font-size: xx-large;
-    padding: 12%;
-    background-color: rgba(37, 14, 14, 0.46);
-    font-family: "Montserrat";
-    font-weight: bolder;
-    color: #D3CDCD;
-    border-style: none;
-    border-radius: 10px;
+	justify-content: center;
+	font-size: 20%;
+	font-size: xx-large;
+	padding: 12%;
+	background-color: rgba(37, 14, 14, 0.46);
+	font-family: "Montserrat";
+	font-weight: bolder;
+	color: #D3CDCD;
+	border-style: none;
+	border-radius: 10px;
 
 }
 

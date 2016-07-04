@@ -21,5 +21,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', appviews.home, name='home'),
     url(r'^video/$',appviews.video, name='video'),
+    url(r'^video/download/$', appviews.download_video, name = 'download-video'),
 
 ]

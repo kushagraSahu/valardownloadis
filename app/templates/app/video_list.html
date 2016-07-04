@@ -10,27 +10,45 @@
 	<script src="{% static 'app/materialize-src/js/bin/materialize.js'%}"></script>
 </head>
 <body>
+	<style>
+		html { 
+			background: url({% static "app/images/Elegant_Background-13.jpg" %}) no-repeat center center fixed; 
+		}
+
+		#home p {
+			text-align: center;
+			padding-top: 3%;
+			font-size: 70px;
+			font-family: "Montserrat", sans-serif;
+			font-weight: bolder;
+			color: white;
+		}
+	</style>
+	<!-- <img src={% static "app/images/Elegant_Background-13.jpg" %}> -->
+	<div id = "home" style="height:30%">
+		<a href="{% url 'home' %}"><p>VALAR DOWNLOADIS.</p></a>
+	</div>
 	{% if not list_videos %}
 	<p>OOPS. Connection Timed Out</p>
 	{% endif %}
-	{% for video in list_videos %}
-	<div class="row" >
-		<div class="col s12 m7 l4" style="margin-left:33.33%">
-			<div class="card">
-				<div class="card-image">
-					<img src= "https://i.ytimg.com/vi/T94PHkuydcw/hqdefault.jpg?custom=true&w=480&h=360&stc=true&jpg444=true&jpgq=90&sp=68&sigh=7yEZnrXBwFz7HyGjXyJVmQL1Dao">
-				</div>
-				<div class="card-content">
-					<h4>Kun Faaya Kun </h4>
-					<p style="font-size:20px">Youtube views: 17,00,000</p>
-					<p style="font-size:20px">Watch on YouTube <a href="https://www.youtube.com/watch?v=T94PHkuydcw" target="_blank">Click</a></p>
-				</div>
-				<div class="card-action">
-					<a href="http://r7---sn-vgqsenel.googlevideo.com/videoplayback?ip=23.94.22.66&amp;upn=e07hnz86DTc&amp;ratebypass=yes&amp;lmt=1458192571226493&amp;expire=1467672382&amp;dur=221.355&amp;ipbits=0&amp;initcwndbps=2492500&amp;pl=20&amp;nh=IgpwcjA1Lm9yZDEyKgs2Mi4xMTUuNjEuNQ&amp;key=yt6&amp;fexp=9416126%2C9416891%2C9418643%2C9419451%2C9422596%2C9428398%2C9429693%2C9431012%2C9432565%2C9433096%2C9433380%2C9433946%2C9435526%2C9435876%2C9436589%2C9437034%2C9437066%2C9437552%2C9437733%2C9437742%2C9437948%2C9438292%2C9439419%2C9439562%2C9439652%2C9439864%2C9439957%2C9440376%2C9440494&amp;itag=22&amp;cnr=14&amp;ms=au&amp;mt=1467650435&amp;mv=m&amp;source=youtube&amp;mm=31&amp;mn=sn-vgqsenel&amp;sver=3&amp;id=o-ABBUzh5g8NXspe8yUlVXw5H01JozQgXdM1GSXBvyl5lx&amp;sparams=cnr%2Cdur%2Cid%2Cinitcwndbps%2Cip%2Cipbits%2Citag%2Clmt%2Cmime%2Cmm%2Cmn%2Cms%2Cmv%2Cnh%2Cpl%2Cratebypass%2Csource%2Cupn%2Cexpire&amp;mime=video%2Fmp4&amp;signature=9C61CA2B1AAF744488A76DA351039B18BBF223C2.B061601A428BD28D96BAFBF20A7CC4D756726186&amp;title=Victoria%27s+Secret+Angels+Lip+Sync+%27Hands+to+Myself%27">High Quality Download</a>
-					<a href="http://r7---sn-vgqsenel.googlevideo.com/videoplayback?source=youtube&amp;upn=e07hnz86DTc&amp;ratebypass=yes&amp;lmt=1458192532841181&amp;expire=1467672382&amp;dur=221.355&amp;ipbits=0&amp;initcwndbps=2492500&amp;pl=20&amp;nh=IgpwcjA1Lm9yZDEyKgs2Mi4xMTUuNjEuNQ&amp;key=yt6&amp;fexp=9416126%2C9416891%2C9418643%2C9419451%2C9422596%2C9428398%2C9429693%2C9431012%2C9432565%2C9433096%2C9433380%2C9433946%2C9435526%2C9435876%2C9436589%2C9437034%2C9437066%2C9437552%2C9437733%2C9437742%2C9437948%2C9438292%2C9439419%2C9439562%2C9439652%2C9439864%2C9439957%2C9440376%2C9440494&amp;itag=18&amp;ms=au&amp;mt=1467650435&amp;mv=m&amp;ip=23.94.22.66&amp;mm=31&amp;mn=sn-vgqsenel&amp;sver=3&amp;id=o-ABBUzh5g8NXspe8yUlVXw5H01JozQgXdM1GSXBvyl5lx&amp;sparams=dur%2Cid%2Cinitcwndbps%2Cip%2Cipbits%2Citag%2Clmt%2Cmime%2Cmm%2Cmn%2Cms%2Cmv%2Cnh%2C">Low Quality Download</a>
+		{% for video in list_videos %}
+		<div class="row" >
+			<div class="col s12 m7 l4" style="margin-left:33.33%">
+				<div class="card">
+					<div class="card-image">
+						<img src= "{{ video.thumbnail }}">
+					</div>
+					<div class="card-content">
+						<h4>{{ video.title }} </h4>
+						<p style="font-size:20px">Youtube views : {{ video.views }}</p>
+						<p style="font-size:20px"><a href="{{ video.watch_link }}" target="_blank">Watch on YouTube : <i class="fa fa-youtube-play" aria-hidden="true"></i></a></p>
+					</div>
+					<div class="card-action">
+						<a href="{{ video.highq_link }}">High Quality Download</a>
+						<a href="{{ video.lowq_link }}">Low Quality Download</a>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-	{% endfor %}
+		{% endfor %}
 </body>

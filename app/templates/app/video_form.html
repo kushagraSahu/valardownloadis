@@ -1,7 +1,7 @@
 {% load staticfiles %}
 <html>
 <head>
-	<title></title>
+	<title>Video Form</title>
 	<script src="https://code.jquery.com/jquery-3.0.0.js" integrity="sha256-jrPLZ+8vDxt2FnE1zvZXCkCcebI/C8Dt5xyaQBjxQIo=" crossorigin="anonymous"></script>
 	<link href = "{% static 'app/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
 	<link href='https://fonts.googleapis.com/css?family=Montserrat:700' rel='stylesheet' type='text/css'>
@@ -10,15 +10,9 @@
 	<script src="{% static 'app/materialize-src/js/bin/materialize.js'%}"></script>
 </head>
 <body>
-	<img src={% static "app/images/Elegant_Background-12.jpg" %}>
 	<style>
-		img {
-			width: 100%;
-			height: 100%;
-			position: absolute;
-			left: 0px;
-			top: 0px;
-			z-index: -1;
+		html { 
+			background: url({% static "app/images/Elegant_Background-12.jpg" %}) no-repeat center center fixed; 
 		}
 		p {
 			text-align: center;

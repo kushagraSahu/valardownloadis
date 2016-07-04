@@ -213,10 +213,10 @@ def download_video(request):
 				video = {
 					'title': video_title,
 					'thumbnail': thumbnail_src,
-					'watch_yt_link': base_youtube_watch+watch_url,
+					'watch_link': base_youtube_watch+watch_url,
 					'views': video_views,
-					'highq_video': high_quality_video_link,
-					'lowq_video': low_quality_video_link,
+					'highq_link': high_quality_video_link,
+					'lowq_link': low_quality_video_link,
 				}
 				list_video_details.append(video)
 

@@ -22,7 +22,7 @@ global activate_playlist
 global activate_video
 
 global hit_threshold
-hit_threshold = 6
+hit_threshold = 4
 
 activate_video = False
 activate_playlist = False
@@ -36,7 +36,7 @@ def home(request):
 def video(request):
 	return render(request, 'app/video_form.html')
 
-def get_download_links(watch_url, views):
+def get_download_links(watch_url):
 	print("Yo")
 	global hit_threshold
 	global flag_stay_video
@@ -88,7 +88,7 @@ def get_download_links(watch_url, views):
 							i+=1
 							video_format = link['title']
 							list_links.append(link)
-							print(str(i) + ". " + download + ", " + str(video_format) + ", Youtube Views: " + views)
+							print(str(i) + ". " + download + ", " + str(video_format) + ", Youtube Views: ")
 			
 			print(list_links)
 			high_quality_link = list_links[0]
@@ -117,114 +117,135 @@ def download_video(request):
 	global hit_threshold
 	global activate_video
 	global activate_playlist
+	activate_video = True
+	activate_playlist = False
 	abort_override = False
 	query_range = 2
+	refresh_search_range = 3
 	search = request.POST.get('search', '')
 	if search:
-		search_url = base_yt_url + search
-		session1 = dryscrape.Session()
-		session1.visit(search_url)
-		response=session1.body()
-		soup = BeautifulSoup(response,"lxml")
-		list_results = soup.find('div', {'id': 'results'}).find('ol',{'class':'section-list'}).find('ol',{'class':'item-section'}).findAll('li')
-		watch_result_list = []
-		i=0
-		for result in list_results:
-			print(i)
-			if result.find('div', {'class': 'pyv-afc-ads-container'}):
-				continue
-			else:
-				print("Inside")
-				hit_count = 1
-				while True:
-					print(hit_count)
-					if hit_count > hit_threshold:
-						abort_override = True
-						break
-					watch_result = result.find('div', {'class': "yt-lockup-content"})
-					if watch_result != None:
-						i+=1
-						print(watch_result)
-						watch_result_list.append(watch_result)
-						break
-					hit_count += 1
-					
-				if(i>query_range):
-					break
-
-		#To get thumbnail photos of videos
-		thumbnail_video_list = []
-		i=0
-		for result in list_results:
-			print(i)
-			if result.find('div', {'class': 'pyv-afc-ads-container'}):
-				continue
-			else:
-				print("Inside2")
-				hit_count = 1
-				while True:
-					print(hit_count)
-					print("in2")
-					if hit_count > hit_threshold:
-
-						abort_override = True
-						break
-					thumbnail_result = result.find('div', {'class': re.compile(r'yt-lockup-thumbnail')})
-					if thumbnail_result != None:
-						i+=1
-						thumbnail_src = thumbnail_result.find('span', {'class': 'yt-thumb-simple'}).find('img')['src']
-						thumbnail_video_list.append(thumbnail_src)
-						break
-					hit_count += 1
+		for i in range(0,refresh_search_range):
+			search_url = base_yt_url + search
+			session1 = dryscrape.Session()
+			session1.visit(search_url)
+			response=session1.body()
+			soup = BeautifulSoup(response,"lxml")
+			list_results = soup.find('div', {'id': 'results'}).find('ol',{'class':'section-list'}).find('ol',{'class':'item-section'}).findAll('li')
+			watch_result_list = []
+			i=0
+			for result in list_results:
+				print(i)
+				if result.find('div', {'class': 'pyv-afc-ads-container'}):
+					continue
+				else:
+					print("Inside")
+					hit_count = 1
+					while True:
+						print(hit_count)
+						if hit_count > hit_threshold:
+							abort_override = True
+							break
+						watch_result = result.find('div', {'class': "yt-lockup-content"})
+						if watch_result != None:
+							i+=1
+							print(watch_result)
+							watch_result_list.append(watch_result)
+							break
+						hit_count += 1
 						
-				if(i>query_range):
-					break
-		print(thumbnail_video_list)
-		list_video_details = []
-		activate_video = True
-		activate_playlist = False
-		for i in range(0,query_range+1):
-			video = {}
-			hit_count = 1
-			while True:
-				if hit_count > hit_threshold:
-					break
-				video_views_no_text = watch_result_list[i].find('ul', {'class': 'yt-lockup-meta-info'})
-				if video_views_no_text != None:
-					video_views = video_views_no_text.findAll('li')[1].text
-					break
-				hit_count+=1
-			if hit_count > hit_threshold:
-				continue
-			video_views = video_views.split()[0]
-			watch_url = watch_result_list[i].find('h3', {'class': 'yt-lockup-title'}).find('a')['href']
-			video_title = watch_result_list[i].find('h3', {'class': 'yt-lockup-title'}).find('a').text
-			thumbnail_src = thumbnail_video_list[i]
-			img_break = thumbnail_src.split('&')
-			res1 = "w=480"
-			res2 = "w=360"
-			thumbnail_src = img_break[0] + "&" + res1 + "&" + res2
-			for i in range(2,len(img_break)):
-				thumbnail_src = thumbnail_src + "&" + img_break[i]
-			download_links = get_download_links(watch_url, video_views)
-			if download_links != None:
-				high_quality_video_link = download_links['high_quality_video']
-				low_quality_video_link = download_links['low_quality_video']
-				video = {
-					'title': video_title,
-					'thumbnail': thumbnail_src,
-					'watch_link': base_youtube_watch+watch_url,
-					'views': video_views,
-					'highq_link': high_quality_video_link,
-					'lowq_link': low_quality_video_link,
-				}
-				list_video_details.append(video)
+					if(i>query_range):
+						break
 
-		context = {
-			'list_videos': list_video_details,
-		}
-		return render(request, 'app/video_list.html', context)
-			
+			#To get thumbnail photos of videos
+			video_duration_list = []
+			thumbnail_video_list = []
+			i=0
+			for result in list_results:
+				print(i)
+				if result.find('div', {'class': 'pyv-afc-ads-container'}):
+					continue
+				else:
+					print("Inside2")
+					hit_count = 1
+					while True:
+						print(hit_count)
+						print("in2")
+						if hit_count > hit_threshold:
+							abort_override = True
+							break
+						thumbnail_result = result.find('div', {'class': re.compile(r'yt-lockup-thumbnail')})
+						if thumbnail_result != None:
+							i+=1
+							thumbnail_src = thumbnail_result.find('span', {'class': 'yt-thumb-simple'}).find('img')['src']
+							thumbnail_video_list.append(thumbnail_src)
+							video_time = thumbnail_result.find('span', {'class': 'video-time'}).text
+							video_duration_list.append(video_time)
+							break
+						hit_count += 1
+							
+					if(i>query_range):
+						break
+			list_video_details = []
+			for i in range(0,query_range+1):
+				video = {}
+				hit_count = 1
+				while True:
+					if hit_count > hit_threshold:
+						break
+					video_views_no_text = watch_result_list[i].find('ul', {'class': 'yt-lockup-meta-info'})
+					if video_views_no_text != None:
+						video_views = video_views_no_text.findAll('li')[1].text
+						break
+					hit_count+=1
+				if hit_count > hit_threshold:
+					continue
+				video_views = video_views.split()[0]
+				watch_url = watch_result_list[i].find('h3', {'class': 'yt-lockup-title'}).find('a')['href']
+				video_title = watch_result_list[i].find('h3', {'class': 'yt-lockup-title'}).find('a').text
+				video_time = video_duration_list[i]
+				thumbnail_src = thumbnail_video_list[i]
+				img_break = thumbnail_src.split('&')
+				res1 = "w=480"
+				res2 = "w=360"
+				thumbnail_src = img_break[0] + "&" + res1 + "&" + res2
+				for i in range(2,len(img_break)):
+					thumbnail_src = thumbnail_src + "&" + img_break[i]
+				download_links = get_download_links(watch_url)
+				if download_links != None:
+					high_quality_video_link = download_links['high_quality_video']
+					low_quality_video_link = download_links['low_quality_video']
+					video = {
+						'title': video_title,
+						'thumbnail': thumbnail_src,
+						'watch_link': base_youtube_watch+watch_url,
+						'views': video_views,
+						'highq_link': high_quality_video_link,
+						'lowq_link': low_quality_video_link,
+						'time': video_time,
+					}
+					list_video_details.append(video)
+				else:
+					break
+
+			if not list_video_details:
+				continue
+			context = {
+				'list_videos': list_video_details,
+			}
+			return render(request, 'app/video_list.html', context)
+			break
+	else:
+		url = request.POST.get('url', '')
+		watch_url = "/" + url.split('/')[3]
+		print(watch_url)
+		while True:
+			download_links = get_download_links(watch_url)
+			if download_links != None:
+				break
+		webbrowser.open_new(download_links['high_quality_video'])
+		return render(request, 'app/home.html')
+
+
 
 
 

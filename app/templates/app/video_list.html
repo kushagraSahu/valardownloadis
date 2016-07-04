@@ -15,7 +15,11 @@
 			background: url({% static "app/images/Elegant_Background-13.jpg" %}) no-repeat center center fixed; 
 		}
 
-		#home p {
+		.home {
+			margin-top: 2%;
+		}
+
+		.home p {
 			text-align: center;
 			padding-top: 3%;
 			font-size: 70px;
@@ -23,32 +27,54 @@
 			font-weight: bolder;
 			color: white;
 		}
+		nav{
+			position: fixed;
+			color: #fff;
+			background-color: rgba(149, 70, 119, 0.74);;
+			width: 100%;
+			top:0;
+			text-align: center;
+			z-index: 2;
+			font-family: "Montserrat", sans-serif;
+			font-weight: bolder;
+			color: white;
+		}
 	</style>
 	<!-- <img src={% static "app/images/Elegant_Background-13.jpg" %}> -->
-	<div id = "home" style="height:30%">
-		<a href="{% url 'home' %}"><p>VALAR DOWNLOADIS.</p></a>
+	<nav>
+		<div class="nav-wrapper">
+			<div class="col s12">
+				<a href="{% url 'home' %}" class="breadcrumb">Home</a>
+				<a href="{% url 'video' %}" class="breadcrumb">Video Form</a>
+				<a href="#" class="breadcrumb">Download</a>
+			</div>
+		</div>
+	</nav>
+	<div class="home" style="height:30%;">
+		<p><a href="{% url 'home' %}" style="color:white;"">VALAR DOWNLOADIS.</a></p>
 	</div>
 	{% if not list_videos %}
 	<p>OOPS. Connection Timed Out</p>
 	{% endif %}
-		{% for video in list_videos %}
-		<div class="row" >
-			<div class="col s12 m7 l4" style="margin-left:33.33%">
-				<div class="card">
-					<div class="card-image">
-						<img src= "{{ video.thumbnail }}">
-					</div>
-					<div class="card-content">
-						<h4>{{ video.title }} </h4>
-						<p style="font-size:20px">Youtube views : {{ video.views }}</p>
-						<p style="font-size:20px"><a href="{{ video.watch_link }}" target="_blank">Watch on YouTube : <i class="fa fa-youtube-play" aria-hidden="true"></i></a></p>
-					</div>
-					<div class="card-action">
-						<a href="{{ video.highq_link }}">High Quality Download</a>
-						<a href="{{ video.lowq_link }}">Low Quality Download</a>
-					</div>
+	{% for video in list_videos %}
+	<div class="row" >
+		<div class="col s12 m7 l4" style="margin-left:33.33%">
+			<div class="card">
+				<div class="card-image">
+					<img src= "{{ video.thumbnail }}">
+				</div>
+				<div class="card-content">
+					<h5>{{ video.title }} </h5>
+					<p style="font-size:20px">Duration - {{ video.time }}</p>
+					<p style="font-size:20px">Youtube views - {{ video.views }}</p>
+					<p style="font-size:20px"><a href="{{ video.watch_link }}" target="_blank">Watch on YouTube - <i class="fa fa-youtube-play" aria-hidden="true"></i></a></p>
+				</div>
+				<div class="card-action">
+					<a href="{{ video.highq_link }}">High Quality Download</a>
+					<a href="{{ video.lowq_link }}">Low Quality Download</a>
 				</div>
 			</div>
 		</div>
-		{% endfor %}
+	</div>
+	{% endfor %}
 </body>

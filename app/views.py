@@ -22,7 +22,7 @@ global activate_playlist
 global activate_video
 
 global hit_threshold
-hit_threshold = 14
+hit_threshold = 6
 
 activate_video = False
 activate_playlist = False
@@ -108,6 +108,9 @@ def get_download_links(watch_url, views):
 				'low_quality_video' : lowq_download_url
 			}
 			return download_urls
+
+	else:
+		return None
 
 @require_POST
 def download_video(request):
@@ -195,20 +198,32 @@ def download_video(request):
 				continue
 			video_views = video_views.split()[0]
 			watch_url = watch_result_list[i].find('h3', {'class': 'yt-lockup-title'}).find('a')['href']
-			thumbnail_src = thumbnail_video_list[i]
 			video_title = watch_result_list[i].find('h3', {'class': 'yt-lockup-title'}).find('a').text
+			thumbnail_src = thumbnail_video_list[i]
+			img_break = thumbnail_src.split('&')
+			res1 = "w=480"
+			res2 = "w=360"
+			thumbnail_src = img_break[0] + "&" + res1 + "&" + res2
+			for i in range(2,len(img_break)):
+				thumbnail_src = thumbnail_src + "&" + img_break[i]
 			download_links = get_download_links(watch_url, video_views)
-			high_quality_video_link = download_links['high_quality_video']
-			low_quality_video_link = download_links['low_quality_video']
-			video = {
-				'title': video_title,
-				'thumbnail': thumbnail_src,
-				'watch_yt_link': watch_url,
-				'views': video_views,
-				'highq_video_link': high_quality_video_link,
-				'lowq_video_link': low_quality_video_link,
-			}
+			if download_links != None:
+				high_quality_video_link = download_links['high_quality_video']
+				low_quality_video_link = download_links['low_quality_video']
+				video = {
+					'title': video_title,
+					'thumbnail': thumbnail_src,
+					'watch_yt_link': base_youtube_watch+watch_url,
+					'views': video_views,
+					'highq_video': high_quality_video_link,
+					'lowq_video': low_quality_video_link,
+				}
+				list_video_details.append(video)
 
+		context = {
+			'list_videos': list_video_details,
+		}
+		return render(request, 'app/video_list.html', context)
 			
 
 

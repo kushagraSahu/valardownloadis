@@ -1,0 +1,36 @@
+{% load staticfiles %}
+<html>
+<head>
+	<title></title>
+	<script src="https://code.jquery.com/jquery-3.0.0.js" integrity="sha256-jrPLZ+8vDxt2FnE1zvZXCkCcebI/C8Dt5xyaQBjxQIo=" crossorigin="anonymous"></script>
+	<link href = "{% static 'app/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Montserrat:700' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
+	<link href="{% static 'app/materialize-src/sass/materialize.css'%}" rel="stylesheet">
+	<script src="{% static 'app/materialize-src/js/bin/materialize.js'%}"></script>
+</head>
+<body>
+	{% if not list_videos %}
+	<p>OOPS. Connection Timed Out</p>
+	{% endif %}
+	{% for video in list_videos %}
+	<div class="row" >
+		<div class="col s12 m7 l4" style="margin-left:33.33%">
+			<div class="card">
+				<div class="card-image">
+					<img src= "https://i.ytimg.com/vi/T94PHkuydcw/hqdefault.jpg?custom=true&w=480&h=360&stc=true&jpg444=true&jpgq=90&sp=68&sigh=7yEZnrXBwFz7HyGjXyJVmQL1Dao">
+				</div>
+				<div class="card-content">
+					<h4>Kun Faaya Kun </h4>
+					<p style="font-size:20px">Youtube views: 17,00,000</p>
+					<p style="font-size:20px">Watch on YouTube <a href="https://www.youtube.com/watch?v=T94PHkuydcw" target="_blank">Click</a></p>
+				</div>
+				<div class="card-action">
+					<a href="http://r7---sn-vgqsenel.googlevideo.com/videoplayback?ip=23.94.22.66&amp;upn=e07hnz86DTc&amp;ratebypass=yes&amp;lmt=1458192571226493&amp;expire=1467672382&amp;dur=221.355&amp;ipbits=0&amp;initcwndbps=2492500&amp;pl=20&amp;nh=IgpwcjA1Lm9yZDEyKgs2Mi4xMTUuNjEuNQ&amp;key=yt6&amp;fexp=9416126%2C9416891%2C9418643%2C9419451%2C9422596%2C9428398%2C9429693%2C9431012%2C9432565%2C9433096%2C9433380%2C9433946%2C9435526%2C9435876%2C9436589%2C9437034%2C9437066%2C9437552%2C9437733%2C9437742%2C9437948%2C9438292%2C9439419%2C9439562%2C9439652%2C9439864%2C9439957%2C9440376%2C9440494&amp;itag=22&amp;cnr=14&amp;ms=au&amp;mt=1467650435&amp;mv=m&amp;source=youtube&amp;mm=31&amp;mn=sn-vgqsenel&amp;sver=3&amp;id=o-ABBUzh5g8NXspe8yUlVXw5H01JozQgXdM1GSXBvyl5lx&amp;sparams=cnr%2Cdur%2Cid%2Cinitcwndbps%2Cip%2Cipbits%2Citag%2Clmt%2Cmime%2Cmm%2Cmn%2Cms%2Cmv%2Cnh%2Cpl%2Cratebypass%2Csource%2Cupn%2Cexpire&amp;mime=video%2Fmp4&amp;signature=9C61CA2B1AAF744488A76DA351039B18BBF223C2.B061601A428BD28D96BAFBF20A7CC4D756726186&amp;title=Victoria%27s+Secret+Angels+Lip+Sync+%27Hands+to+Myself%27">High Quality Download</a>
+					<a href="http://r7---sn-vgqsenel.googlevideo.com/videoplayback?source=youtube&amp;upn=e07hnz86DTc&amp;ratebypass=yes&amp;lmt=1458192532841181&amp;expire=1467672382&amp;dur=221.355&amp;ipbits=0&amp;initcwndbps=2492500&amp;pl=20&amp;nh=IgpwcjA1Lm9yZDEyKgs2Mi4xMTUuNjEuNQ&amp;key=yt6&amp;fexp=9416126%2C9416891%2C9418643%2C9419451%2C9422596%2C9428398%2C9429693%2C9431012%2C9432565%2C9433096%2C9433380%2C9433946%2C9435526%2C9435876%2C9436589%2C9437034%2C9437066%2C9437552%2C9437733%2C9437742%2C9437948%2C9438292%2C9439419%2C9439562%2C9439652%2C9439864%2C9439957%2C9440376%2C9440494&amp;itag=18&amp;ms=au&amp;mt=1467650435&amp;mv=m&amp;ip=23.94.22.66&amp;mm=31&amp;mn=sn-vgqsenel&amp;sver=3&amp;id=o-ABBUzh5g8NXspe8yUlVXw5H01JozQgXdM1GSXBvyl5lx&amp;sparams=dur%2Cid%2Cinitcwndbps%2Cip%2Cipbits%2Citag%2Clmt%2Cmime%2Cmm%2Cmn%2Cms%2Cmv%2Cnh%2C">Low Quality Download</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endfor %}
+</body>

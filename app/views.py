@@ -11,8 +11,10 @@ import time
 import re
 import dryscrape
 from bs4 import BeautifulSoup
+from django.core.urlresolvers import resolve
 
 # Create your views here.
+base_youtube_watch = 'https://www.youtube.com'
 base_yt_url = 'https://www.youtube.com/results?search_query='
 base_ss_url = 'https://www.ssyoutube.com'
 global flag_stay_video
@@ -88,6 +90,7 @@ def get_download_links(watch_url, views):
 							list_links.append(link)
 							print(str(i) + ". " + download + ", " + str(video_format) + ", Youtube Views: " + views)
 			
+			print(list_links)
 			high_quality_link = list_links[0]
 			to_download = high_quality_link
 			to_download_url = to_download['href']
@@ -98,7 +101,7 @@ def get_download_links(watch_url, views):
 				to_download_url = to_download['href']
 				lowq_download_url = to_download_url
 			else:
-				lowq_download_url = ''	
+				lowq_download_url =  highq_download_url	
 			
 			download_urls = {
 				'high_quality_video': highq_download_url,
@@ -106,14 +109,14 @@ def get_download_links(watch_url, views):
 			}
 			return download_urls
 
-@require_GET
+@require_POST
 def download_video(request):
 	global hit_threshold
 	global activate_video
 	global activate_playlist
 	abort_override = False
 	query_range = 2
-	search = request.GET.get('search', '')
+	search = request.POST.get('search', '')
 	if search:
 		search_url = base_yt_url + search
 		session1 = dryscrape.Session()
@@ -145,7 +148,7 @@ def download_video(request):
 					
 				if(i>query_range):
 					break
-					
+
 		#To get thumbnail photos of videos
 		thumbnail_video_list = []
 		i=0
@@ -194,11 +197,19 @@ def download_video(request):
 			watch_url = watch_result_list[i].find('h3', {'class': 'yt-lockup-title'}).find('a')['href']
 			thumbnail_src = thumbnail_video_list[i]
 			video_title = watch_result_list[i].find('h3', {'class': 'yt-lockup-title'}).find('a').text
+			download_links = get_download_links(watch_url, video_views)
+			high_quality_video_link = download_links['high_quality_video']
+			low_quality_video_link = download_links['low_quality_video']
 			video = {
 				'title': video_title,
 				'thumbnail': thumbnail_src,
+				'watch_yt_link': watch_url,
 				'views': video_views,
+				'highq_video_link': high_quality_video_link,
+				'lowq_video_link': low_quality_video_link,
 			}
-			download_links = get_download_links(watch_url, video_views)
+
+			
+
 
 

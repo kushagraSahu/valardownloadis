@@ -69,7 +69,6 @@ def get_download_links(watch_url):
 		hit_count += 1
 	
 	if not abort_override:
-		print("Hello")
 		dropdown_box_list = info_box.find('div', {'class': 'link-box'}).find('div', {'class': 'drop-down-box'}).find('div', {'class': 'list'}).find('div', {'class': 'links'})
 		download_link_groups = dropdown_box_list.findAll('div', {'class': 'link-group'})
 		
@@ -88,9 +87,7 @@ def get_download_links(watch_url):
 							i+=1
 							video_format = link['title']
 							list_links.append(link)
-							print(str(i) + ". " + download + ", " + str(video_format) + ", Youtube Views: ")
 			
-			print(list_links)
 			high_quality_link = list_links[0]
 			to_download = high_quality_link
 			to_download_url = to_download['href']
@@ -138,17 +135,14 @@ def download_video(request):
 				if result.find('div', {'class': 'pyv-afc-ads-container'}):
 					continue
 				else:
-					print("Inside")
 					hit_count = 1
 					while True:
-						print(hit_count)
 						if hit_count > hit_threshold:
 							abort_override = True
 							break
 						watch_result = result.find('div', {'class': "yt-lockup-content"})
 						if watch_result != None:
 							i+=1
-							print(watch_result)
 							watch_result_list.append(watch_result)
 							break
 						hit_count += 1
@@ -161,15 +155,11 @@ def download_video(request):
 			thumbnail_video_list = []
 			i=0
 			for result in list_results:
-				print(i)
 				if result.find('div', {'class': 'pyv-afc-ads-container'}):
 					continue
 				else:
-					print("Inside2")
 					hit_count = 1
 					while True:
-						print(hit_count)
-						print("in2")
 						if hit_count > hit_threshold:
 							abort_override = True
 							break
@@ -178,8 +168,10 @@ def download_video(request):
 							i+=1
 							thumbnail_src = thumbnail_result.find('span', {'class': 'yt-thumb-simple'}).find('img')['src']
 							thumbnail_video_list.append(thumbnail_src)
-							video_time = thumbnail_result.find('span', {'class': 'video-time'}).text
-							video_duration_list.append(video_time)
+							video_time_no_text = thumbnail_result.find('span', {'class': 'video-time'})
+							if video_time_no_text != None:
+								video_time = video_time_no_text.text
+								video_duration_list.append(video_time)
 							break
 						hit_count += 1
 							

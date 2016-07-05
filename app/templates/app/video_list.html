@@ -11,17 +11,31 @@
 </head>
 <body>
 	<style>
-		html { 
-			background: url({% static "app/images/Elegant_Background-13.jpg" %}) no-repeat center center fixed; 
+		#bg {
+			position: fixed; 
+			top: -50%; 
+			left: -50%; 
+			width: 200%; 
+			height: 200%;
+			z-index: -2;
 		}
-
+		#bg img {
+			position: absolute; 
+			top: 0; 
+			left: 0; 
+			right: 0; 
+			bottom: 0; 
+			margin: auto; 
+			min-width: 50%;
+			min-height: 50%;
+		}
 		.home {
 			margin-top: 2%;
 		}
 
 		.home p {
 			text-align: center;
-			padding-top: 3%;
+			padding-top: 5%;
 			font-size: 70px;
 			font-family: "Montserrat", sans-serif;
 			font-weight: bolder;
@@ -34,47 +48,65 @@
 			width: 100%;
 			top:0;
 			text-align: center;
-			z-index: 2;
+			z-index: 3;
 			font-family: "Montserrat", sans-serif;
 			font-weight: bolder;
 			color: white;
 		}
-	</style>
-	<!-- <img src={% static "app/images/Elegant_Background-13.jpg" %}> -->
-	<nav>
-		<div class="nav-wrapper">
-			<div class="col s12">
-				<a href="{% url 'home' %}" class="breadcrumb">Home</a>
-				<a href="{% url 'video' %}" class="breadcrumb">Video Form</a>
-				<a href="#" class="breadcrumb">Download</a>
-			</div>
-		</div>
-	</nav>
-	<div class="home" style="height:30%;">
-		<p><a href="{% url 'home' %}" style="color:white;"">VALAR DOWNLOADIS.</a></p>
-	</div>
-	{% if not list_videos %}
-	<p>OOPS. Connection Timed Out</p>
-	{% endif %}
-	{% for video in list_videos %}
-	<div class="row" >
-		<div class="col s12 m7 l4" style="margin-left:33.33%">
-			<div class="card">
-				<div class="card-image">
-					<img src= "{{ video.thumbnail }}">
-				</div>
-				<div class="card-content">
-					<h5>{{ video.title }} </h5>
-					<p style="font-size:20px">Duration - {{ video.time }}</p>
-					<p style="font-size:20px">Youtube views - {{ video.views }}</p>
-					<p style="font-size:20px"><a href="{{ video.watch_link }}" target="_blank">Watch on YouTube - <i class="fa fa-youtube-play" aria-hidden="true"></i></a></p>
-				</div>
-				<div class="card-action">
-					<a href="{{ video.highq_link }}">High Quality Download</a>
-					<a href="{{ video.lowq_link }}">Low Quality Download</a>
+		#footer {
+			display: none;
+		}
+		.home {
+			height: 30%;
+		}
+		@media screen and (max-width: 820px) {
+			.home {
+				height: 33%;
+			}
+			
+		</style>
+		<!-- <img src={% static "app/images/Elegant_Background-13.jpg" %}> -->
+
+		<nav>
+			<div class="nav-wrapper">
+				<div class="col s12">
+					<a href="{% url 'home' %}" class="breadcrumb">Home</a>
+					<a href="{% url 'video' %}" class="breadcrumb">Video Form</a>
+					<a href="#" class="breadcrumb">Download</a>
 				</div>
 			</div>
+		</nav>
+		<div class="home">
+			<p><a href="{% url 'home' %}" style="color:white;"">VALAR DOHAERIS.</a></p>
 		</div>
-	</div>
-	{% endfor %}
-</body>
+		{% if not list_videos %}
+		<p>OOPS. Connection Timed Out</p>
+		{% endif %}
+		{% for video in list_videos %}
+		<div class="row" >
+			<div class="col s12 m6 l4 offset-l4 offset-m3">
+				<div class="card">
+					<div class="card-image">
+						<img src= "{{ video.thumbnail }}">
+					</div>
+					<div class="card-content">
+						<h5>{{ video.title }} </h5>
+						<p style="font-size:20px">Duration - {{ video.time }}</p>
+						<p style="font-size:20px">Youtube views - {{ video.views }}</p>
+						<p style="font-size:20px"><a href="{{ video.watch_link }}" target="_blank">Watch on YouTube - <i class="fa fa-youtube-play" aria-hidden="true"></i></a></p>
+					</div>
+					<div class="card-action">
+						<a href="{{ video.highq_link }}">High Quality Download</a>
+						<a href="{{ video.lowq_link }}">Low Quality Download</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+		<div id="bg">
+			<img src="{% static "app/images/Elegant_Background-13.jpg" %}" alt="">
+		</div>
+		<div id="back">
+			<a class="waves-effect waves-light btn-large" style="width:33.3%;left: 33.3%">A man is not happy? Go Back<i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+		</div>
+	</body>

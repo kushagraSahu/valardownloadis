@@ -53,42 +53,11 @@ a {
 	margin-bottom: 10%;
 
 }
-/*.fa{
-	padding-left: 3%;
-}*/
-
-/*#buttons2{
+#buttons2 {
 	display: flex;
-	flex: flex-wrap;
-	align-items: center;
-	margin: auto;
+	flex-wrap: wrap;
 	justify-content: space-around;
-	margin-bottom: 0;
-}*/
-
-/*#buttons2 button{
-	transition: all 0.4s ease-in-out;
 }
-*/
-/*#buttons2 div{
-	transition: all 0.4s ease-in-out;
-}
-
-#buttons2 button:hover {
-	color: white;
-}
-
-#buttons2 div:hover { 
-	transform: scale(1.01);
-	background-color: rgba(37, 14, 14, 0.46);
-
-}*/
-/*#btn {
-	height: 30%;
-}
-#btn{
-	background-color: rgba(10,10,10,0.1);
-}*/
 
 /*Parralax*/
 #banner {

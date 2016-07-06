@@ -59,9 +59,9 @@
 		.home {
 			height: 30%;
 		}
-		@media screen and (max-width: 820px) {
+		@media screen and (max-width: 600px) {
 			.home {
-				height: 33%;
+				height: 15%;
 			}
 			
 		</style>
@@ -96,8 +96,8 @@
 						<p style="font-size:20px"><a href="{{ video.watch_link }}" target="_blank">Watch on YouTube - <i class="fa fa-youtube-play" aria-hidden="true"></i></a></p>
 					</div>
 					<div class="card-action">
-						<a href="{{ video.highq_link }}" onclick="thanksToast(event)">High Quality Download</a>
-						<a href="{{ video.lowq_link }}" onclick="thanksToast(event)">Low Quality Download</a>
+						<a href="{{ video.highq_link }}" onclick="thanksToast(event)" style="justify-content:center">High Quality Download</a>
+						<a href="{{ video.lowq_link }}" onclick="thanksToast(event)" style="justify-content:center">Low Quality Download</a>
 					</div>
 				</div>
 			</div>
@@ -107,7 +107,7 @@
 			<img src="{% static "app/images/Elegant_Background-13.jpg" %}" alt="">
 		</div>
 		<div id="back">
-			<a class="waves-effect waves-light btn-large" style="width:33.3%;left: 33.3%" href="javascript:history.back()">A man is not happy? Go Back<i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+			<a class="waves-effect waves-light btn-large" style="width:33.3%;left: 33.3%" href="javascript:history.back()">Go Back<i class="fa fa-arrow-left" aria-hidden="true"></i></a>
 		</div>
 		<script>
 			function thanksToast(e){

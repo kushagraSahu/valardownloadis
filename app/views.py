@@ -22,7 +22,7 @@ global activate_playlist
 global activate_video
 
 global hit_threshold
-hit_threshold = 4
+hit_threshold = 1
 
 activate_video = False
 activate_playlist = False
@@ -45,6 +45,7 @@ def get_download_links(watch_url):
 	download_url = base_ss_url + watch_url
 	session2 = dryscrape.Session()
 	session2.visit(download_url)
+	time.sleep(2)
 	response=session2.body()
 	soup = BeautifulSoup(response,"lxml")
 	sf_result = soup.find('div', {'class':'wrapper'}).find('div', {'class':'downloader-2'}).find('div',{'id':'sf_result'})
@@ -123,8 +124,8 @@ def download_video(request):
 	activate_video = True
 	activate_playlist = False
 	abort_override = False
-	query_range = 2
-	refresh_search_range = 3
+	query_range = 3
+	refresh_search_range = 2
 	search = request.POST.get('search', '')
 	if search:
 		for i in range(0,refresh_search_range):
@@ -232,8 +233,6 @@ def download_video(request):
 						'time': video_time,
 					}
 					list_video_details.append(video)
-				else:
-					break
 
 			if not list_video_details:
 				continue

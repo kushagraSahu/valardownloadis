@@ -6,24 +6,29 @@
 	<link href = "{% static 'app/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
 	<link href='https://fonts.googleapis.com/css?family=Montserrat:700' rel='stylesheet' type='text/css'>
 	<link href='https://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
+	<link href="{% static 'app/materialize-src/sass/materialize.css'%}" rel="stylesheet">
+	<script src="{% static 'app/materialize-src/js/bin/materialize.js'%}"></script>
 	<link rel="stylesheet" type="text/css" href="{% static 'app/css/home.css' %}" />
 
 </head>
 <body>
-	<img src={% static "app/images/YouTube.jpg" %}>
+
+	<div id="bg">
+		<img src="{% static "app/images/House.png" %}" alt="">
+	</div>
 	<div id="Home">
-		
 		<div id="p1">
 			<a href="{% url 'home' %}"><p>VALAR DOWNLOADIS.</p></a>
 		</div>
 		<div id="p2"><p>ALL MEN MUST DOWNLOAD.</p></div>
 		<div id="buttons2">
-			<div id="btn"><button><a href="{% url 'video' %}"><p>Download a Video</p><p><i class="fa fa-2x fa-download" aria-hidden="true"></i></p></a></button></div>
-			<div id="btn"><button><a href="http://127.0.0.1:8000/yo"><p>Download a Playlist</p><p><i class="fa fa-2x fa-download" aria-hidden="true"></i></p></a></button></div>
+			<div id="back">
+				<a class="waves-effect waves-light btn-large" href="{% url 'video' %}">Download a Video<i class="fa fa-2x fa-download" aria-hidden="true"></i></a>
+			</div>
+			<div id="back">
+				<a class="waves-effect waves-light btn-large" href="{% url 'video' %}">Download a Playlist<i class="fa fa-2x fa-download" aria-hidden="true"></i></a>
+			</div>
 		</div>
-
 	</div>
 <!-- <div id="banner">
   	<div class="wrap-center">

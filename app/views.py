@@ -69,6 +69,7 @@ def get_download_links(watch_url):
 		hit_count += 1
 	
 	if not abort_override:
+		print("Hello")
 		dropdown_box_list = info_box.find('div', {'class': 'link-box'}).find('div', {'class': 'drop-down-box'}).find('div', {'class': 'list'}).find('div', {'class': 'links'})
 		download_link_groups = dropdown_box_list.findAll('div', {'class': 'link-group'})
 		
@@ -87,7 +88,9 @@ def get_download_links(watch_url):
 							i+=1
 							video_format = link['title']
 							list_links.append(link)
+							print(str(i) + ". " + download + ", " + str(video_format) + ", Youtube Views: ")
 			
+			print(list_links)
 			high_quality_link = list_links[0]
 			to_download = high_quality_link
 			to_download_url = to_download['href']
@@ -105,6 +108,9 @@ def get_download_links(watch_url):
 				'low_quality_video' : lowq_download_url
 			}
 			return download_urls
+
+		elif activate_playlist:
+			pass
 
 	else:
 		return None
@@ -135,14 +141,17 @@ def download_video(request):
 				if result.find('div', {'class': 'pyv-afc-ads-container'}):
 					continue
 				else:
+					print("Inside")
 					hit_count = 1
 					while True:
+						print(hit_count)
 						if hit_count > hit_threshold:
 							abort_override = True
 							break
 						watch_result = result.find('div', {'class': "yt-lockup-content"})
 						if watch_result != None:
 							i+=1
+							print(watch_result)
 							watch_result_list.append(watch_result)
 							break
 						hit_count += 1
@@ -155,11 +164,15 @@ def download_video(request):
 			thumbnail_video_list = []
 			i=0
 			for result in list_results:
+				print(i)
 				if result.find('div', {'class': 'pyv-afc-ads-container'}):
 					continue
 				else:
+					print("Inside2")
 					hit_count = 1
 					while True:
+						print(hit_count)
+						print("in2")
 						if hit_count > hit_threshold:
 							abort_override = True
 							break
@@ -194,7 +207,10 @@ def download_video(request):
 				video_views = video_views.split()[0]
 				watch_url = watch_result_list[i].find('h3', {'class': 'yt-lockup-title'}).find('a')['href']
 				video_title = watch_result_list[i].find('h3', {'class': 'yt-lockup-title'}).find('a').text
-				video_time = video_duration_list[i]
+				if len(video_duration_list) > i :
+					video_time = video_duration_list[i]
+				else:
+					video_time = " : "
 				thumbnail_src = thumbnail_video_list[i]
 				img_break = thumbnail_src.split('&')
 				res1 = "w=480"
@@ -237,7 +253,91 @@ def download_video(request):
 		webbrowser.open_new(download_links['high_quality_video'])
 		return render(request, 'app/home.html')
 
+def download_playlist():
+	global activate_video
+	global activate_playlist
+	all_videos = False
+	list_watch_urls = []
+	print("Please enter the exact url of the youtube playlist. For eg- 'https://www.youtube.com/playlist?list=PL6gx4Cwl9DGBYxWxJtLi8c6PGjNKGYGZZ'")
+	search_url = input()
+	response = requests.get(search_url)
+	soup = BeautifulSoup(response.text, 'lxml')
+	content = soup.find('div',{'id': 'page-container'}).find('div',{'id': 'content'}).find('div',{'class': 'branded-page-v2-col-container'})
+	inner_content = content.find('div',{'class': 'branded-page-v2-col-container-inner'}).find('div',{'class': 'branded-page-v2-primary-col'})
+	header_content = inner_content.find('div',{'id': 'pl-header'}).find('div',{'class': 'pl-header-content'})
+	playlist_title = header_content.find('h1',{'class': 'pl-header-title'}).text
+	playlist_details = header_content.find('ul', {'class', 'pl-header-details'}).findAll('li')
+	playlist_author = playlist_details[0].text
+	playlist_video_count = int(playlist_details[1].text.split()[0])
+	playlist_views = playlist_details[2].text.split()[0]
+	print("Title:" + playlist_title)
+	print("By: " + playlist_author)
+	print("Total videos: " + str(playlist_video_count))
+	print("Youtube Views: " + playlist_views)
+	print("Is this your Playlist?\nEnter 'Y' for yes and any other key to disagree.")
+	inp = input()
+	
+	if inp == 'y' or inp == 'Y':
+		#Still to ask for choice between different video quality(720 or 360p, etc)
+		playlist_content = inner_content.find('ul', {'id': 'browse-items-primary'}).find('div', {'id': 'pl-video-list'}).find('tbody', {'id':'pl-load-more-destination'})
+		print("To download all the videos, Press 'A'.\nTo download only the specific videos of the playlist, Press 'S'")
+		list_videos = playlist_content.findAll('tr')
+		while True:
+			choice = input()
+			if choice == 'A' or choice == 'a':
+				all_videos = True
+				break
+			elif choice == 'S' or choice == 's':
+				index = 1
+				for tr in list_videos:
 
+					video_title = tr.find('td', {'class': 'pl-video-title'}).find('a').text
+					print(str(index) + '. ' + video_title)
+					index += 1
+				print("Enter the index no. of videos you want to download specifically from the playlist(preferred in increasing order). For eg - '1 4 5 7' or '2 6 3 11'")
+				#Taking input integer no.s in a list.
+				specific_videos = input()
+				index_videos = list(map(int, specific_videos.split()))
+				break
+
+		if all_videos:
+			for tr in list_videos:
+				video = tr.find('td', {'class': 'pl-video-title'}).find('a')
+				watch_url = video['href']
+				list_watch_urls.append(watch_url)
+		else:
+			index = 1
+			for tr in list_videos:
+				#Checking whether index is in the list provided by the user.
+				if index in index_videos:
+					video = tr.find('td', {'class': 'pl-video-title'}).find('a')
+					watch_url = video['href']
+					list_watch_urls.append(watch_url)
+				index += 1
+		# To download only a subset of all the videos at a time, then to resume the download on user's input
+		# print("I recommend you download only a set of videos at one time. Depending on your speed, please enter the number of videos you want to download at a time")
+		# set_count = input()
+		# j = 0
+		# pause_download = False
+		# activate_download = ''
+		activate_video = False
+		activate_playlist = True
+		
+		for url in list_watch_urls:
+			download(url, playlist_views)
+			# if j!=0 and j%set_count !=0:
+			# 	download(url, playlist_views)
+			# elif not j:
+			# 	download(url, playlist_views)
+			# elif j!=0 and j%set_count == 0:
+			# 	print("Now you press key 'D' to download the next" + set_count + " videos once the previous 5 are completed.")				
+			# Unless user does'nt press character 'D', next set of videos wont download!
+			# 	while activate_download != 'D':
+			# 		activate_download = input()
+
+	else:
+		print("Please check your url again. Thanks!")
+		download_playlist()
 
 
 

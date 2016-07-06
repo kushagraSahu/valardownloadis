@@ -12,13 +12,23 @@ a {
 	color: inherit; 
 } 
 
-img {
-	width: 100%;
-	height: 100%;
-	position: absolute;
-	left: 0px;
-	top: 0px;
-	z-index: -1;
+#bg {
+	position: fixed; 
+	top: -50%; 
+	left: -50%; 
+	width: 200%; 
+	height: 200%;
+	z-index: -2;
+}
+#bg img {
+	position: absolute; 
+	top: 0; 
+	left: 0; 
+	right: 0; 
+	bottom: 0; 
+	margin: auto; 
+	min-width: 50%;
+	min-height: 50%;
 }
 
 #p1 p{
@@ -43,24 +53,24 @@ img {
 	margin-bottom: 10%;
 
 }
-.fa{
+/*.fa{
 	padding-left: 3%;
-}
+}*/
 
-#buttons2{
+/*#buttons2{
 	display: flex;
 	flex: flex-wrap;
 	align-items: center;
 	margin: auto;
 	justify-content: space-around;
 	margin-bottom: 0;
-}
+}*/
 
-#buttons2 button{
+/*#buttons2 button{
 	transition: all 0.4s ease-in-out;
 }
-
-#buttons2 div{
+*/
+/*#buttons2 div{
 	transition: all 0.4s ease-in-out;
 }
 
@@ -69,30 +79,16 @@ img {
 }
 
 #buttons2 div:hover { 
-	transform: scale(1.2);
+	transform: scale(1.01);
 	background-color: rgba(37, 14, 14, 0.46);
 
-}
-#btn {
+}*/
+/*#btn {
 	height: 30%;
 }
 #btn{
 	background-color: rgba(10,10,10,0.1);
-}
-
-#Home button{
-	justify-content: center;
-	font-size: 20%;
-	font-size: xx-large;
-	padding: 12%;
-	background-color: rgba(37, 14, 14, 0.46);
-	font-family: "Montserrat";
-	font-weight: bolder;
-	color: #D3CDCD;
-	border-style: none;
-	border-radius: 10px;
-
-}
+}*/
 
 /*Parralax*/
 #banner {
@@ -144,6 +140,7 @@ img {
 		flex-direction: column;
 	}
 	#btn {
+		padding-top: 10%;
 		height: 10%;
 		margin-bottom: 0%;
 	}

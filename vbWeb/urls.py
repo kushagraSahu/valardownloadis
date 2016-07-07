@@ -22,5 +22,8 @@ urlpatterns = [
     url(r'^$', appviews.home, name='home'),
     url(r'^video/$',appviews.video, name='video'),
     url(r'^video/download/$', appviews.download_video, name = 'download-video'),
+    url(r'^playlist/$',appviews.playlist, name='playlist'),
+    url(r'^playlist/confirm/$',appviews.confirm_playlist, name='confirm-playlist'),
+    url(r'^playlist/download/$', appviews.get_playlist_videos_details, name = 'download-playlist'),
 
 ]

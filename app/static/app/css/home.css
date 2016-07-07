@@ -57,8 +57,11 @@ a {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-around;
+	align-items: center;
 }
-
+#btn {
+	font-size: 20px;
+}
 /*Parralax*/
 #banner {
 	margin-bottom: 50px;

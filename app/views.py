@@ -14,6 +14,8 @@ from bs4 import BeautifulSoup
 from django.core.urlresolvers import resolve
 
 # Create your views here.
+
+#global variables
 base_youtube_watch = 'https://www.youtube.com'
 base_yt_url = 'https://www.youtube.com/results?search_query='
 base_ss_url = 'https://www.ssyoutube.com'
@@ -36,6 +38,9 @@ def home(request):
 def video(request):
 	return render(request, 'app/video_form.html')
 
+def playlist(request):
+	return render(request, 'app/playlist.html')
+
 def get_download_links(watch_url):
 	print("Yo")
 	global hit_threshold
@@ -45,7 +50,7 @@ def get_download_links(watch_url):
 	download_url = base_ss_url + watch_url
 	session2 = dryscrape.Session()
 	session2.visit(download_url)
-	time.sleep(2)
+	time.sleep(1.5)
 	response=session2.body()
 	soup = BeautifulSoup(response,"lxml")
 	sf_result = soup.find('div', {'class':'wrapper'}).find('div', {'class':'downloader-2'}).find('div',{'id':'sf_result'})
@@ -116,7 +121,7 @@ def get_download_links(watch_url):
 	else:
 		return None
 
-@require_POST
+@require_GET
 def download_video(request):
 	global hit_threshold
 	global activate_video
@@ -126,7 +131,7 @@ def download_video(request):
 	abort_override = False
 	query_range = 3
 	refresh_search_range = 2
-	search = request.POST.get('search', '')
+	search = request.GET.get('search', '')
 	if search:
 		for i in range(0,refresh_search_range):
 			search_url = base_yt_url + search
@@ -242,7 +247,7 @@ def download_video(request):
 			return render(request, 'app/video_list.html', context)
 			break
 	else:
-		url = request.POST.get('url', '')
+		url = request.GET.get('url', '')
 		watch_url = "/" + url.split('/')[3]
 		print(watch_url)
 		while True:
@@ -252,10 +257,42 @@ def download_video(request):
 		webbrowser.open_new(download_links['high_quality_video'])
 		return render(request, 'app/home.html')
 
+@require_GET
+def confirm_playlist(request):
+	if request.is_ajax():
+		search_url = request.GET.get('playlist_url')
+		response = requests.get(search_url)
+		soup = BeautifulSoup(response.text, 'lxml')
+		content = soup.find('div',{'id': 'page-container'}).find('div',{'id': 'content'}).find('div',{'class': 'branded-page-v2-col-container'})
+		inner_content = content.find('div',{'class': 'branded-page-v2-col-container-inner'}).find('div',{'class': 'branded-page-v2-primary-col'})
+		header_content = inner_content.find('div',{'id': 'pl-header'}).find('div',{'class': 'pl-header-content'})
+		playlist_title = header_content.find('h1',{'class': 'pl-header-title'}).text
+		playlist_details = header_content.find('ul', {'class', 'pl-header-details'}).findAll('li')
+		playlist_author = playlist_details[0].text
+		playlist_video_count = int(playlist_details[1].text.split()[0])
+		playlist_views = playlist_details[2].text.split()[0]
+		playlist_image = inner_content.find('div', {'id':'pl-header'}).find('div',{'class':'pl-header-thumb'}).find('img')['src']
+		playlist_image_src = "https:" + playlist_image
+		data = {
+			'title' : str(playlist_title),
+			'author': str(playlist_author),
+			'views' : str(playlist_views),
+			'videos_count' : str(playlist_video_count),
+			'playlist_image' : playlist_image_src, 
+		}
+		return JsonResponse(data)
+	else:
+		return Http404
+
+@require_GET
+def get_playlist_videos_details(request):
+	search_url = request.GET.get('url','')
+	print("Playlist_url : " + search_url)
+
+
 def download_playlist():
 	global activate_video
 	global activate_playlist
-	all_videos = False
 	list_watch_urls = []
 	print("Please enter the exact url of the youtube playlist. For eg- 'https://www.youtube.com/playlist?list=PL6gx4Cwl9DGBYxWxJtLi8c6PGjNKGYGZZ'")
 	search_url = input()
@@ -313,26 +350,12 @@ def download_playlist():
 					watch_url = video['href']
 					list_watch_urls.append(watch_url)
 				index += 1
-		# To download only a subset of all the videos at a time, then to resume the download on user's input
-		# print("I recommend you download only a set of videos at one time. Depending on your speed, please enter the number of videos you want to download at a time")
-		# set_count = input()
-		# j = 0
-		# pause_download = False
-		# activate_download = ''
+
 		activate_video = False
 		activate_playlist = True
 		
 		for url in list_watch_urls:
 			download(url, playlist_views)
-			# if j!=0 and j%set_count !=0:
-			# 	download(url, playlist_views)
-			# elif not j:
-			# 	download(url, playlist_views)
-			# elif j!=0 and j%set_count == 0:
-			# 	print("Now you press key 'D' to download the next" + set_count + " videos once the previous 5 are completed.")				
-			# Unless user does'nt press character 'D', next set of videos wont download!
-			# 	while activate_download != 'D':
-			# 		activate_download = input()
 
 	else:
 		print("Please check your url again. Thanks!")

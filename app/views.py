@@ -20,8 +20,6 @@ base_youtube_watch = 'https://www.youtube.com'
 base_yt_url = 'https://www.youtube.com/results?search_query='
 base_ss_url = 'https://www.ssyoutube.com'
 global flag_stay_video
-global activate_playlist
-global activate_video
 
 global hit_threshold
 hit_threshold = 1
@@ -78,56 +76,45 @@ def get_download_links(watch_url):
 		print("Hello")
 		dropdown_box_list = info_box.find('div', {'class': 'link-box'}).find('div', {'class': 'drop-down-box'}).find('div', {'class': 'list'}).find('div', {'class': 'links'})
 		download_link_groups = dropdown_box_list.findAll('div', {'class': 'link-group'})
-		
-		if activate_video:
-			i=0
-			list_links = []
+		i=0
+		list_links = []
+		for group in download_link_groups:
+			download_links = group.findAll('a')
+			for link in download_links:
+				download = str(link['download'])
+				extension = re.split(r'\.(?!\d)', download)[-1]
+				class_link = link['class']
+				if class_link[0] != "no-audio":
+					if extension == "mp4":
+						i+=1
+						video_format = link['title']
+						list_links.append(link)
+						print(str(i) + ". " + download + ", " + str(video_format) + ", Youtube Views: ")
 			
-			for group in download_link_groups:
-				download_links = group.findAll('a')
-				for link in download_links:
-					download = str(link['download'])
-					extension = re.split(r'\.(?!\d)', download)[-1]
-					class_link = link['class']
-					if class_link[0] != "no-audio":
-						if extension == "mp4":
-							i+=1
-							video_format = link['title']
-							list_links.append(link)
-							print(str(i) + ". " + download + ", " + str(video_format) + ", Youtube Views: ")
-			
-			print(list_links)
-			high_quality_link = list_links[0]
-			to_download = high_quality_link
+		print(list_links)
+		high_quality_link = list_links[0]
+		to_download = high_quality_link
+		to_download_url = to_download['href']
+		highq_download_url = to_download_url
+		if len(list_links) != 1:
+			lowq_download_link = list_links[1]
+			to_download = lowq_download_link
 			to_download_url = to_download['href']
-			highq_download_url = to_download_url
-			if len(list_links) != 1:
-				lowq_download_link = list_links[1]
-				to_download = lowq_download_link
-				to_download_url = to_download['href']
-				lowq_download_url = to_download_url
-			else:
-				lowq_download_url =  highq_download_url	
+			lowq_download_url = to_download_url
+		else:
+			lowq_download_url =  highq_download_url	
 			
-			download_urls = {
-				'high_quality_video': highq_download_url,
-				'low_quality_video' : lowq_download_url
-			}
-			return download_urls
-
-		elif activate_playlist:
-			pass
-
+		download_urls = {
+			'high_quality_video': highq_download_url,
+			'low_quality_video' : lowq_download_url
+		}
+		return download_urls
 	else:
 		return None
 
 @require_GET
 def download_video(request):
 	global hit_threshold
-	global activate_video
-	global activate_playlist
-	activate_video = True
-	activate_playlist = False
 	abort_override = False
 	query_range = 3
 	refresh_search_range = 2
@@ -310,6 +297,28 @@ def get_playlist_videos_details(request):
 	}
 	return render(request, 'app/playlist_videos.html', context)
 
+@require_GET
+def download_all_videos_playlist(request):
+	search_url = request.GET.get('playlist_url','')
+	response = requests.get(search_url)
+	soup = BeautifulSoup(response.text, 'lxml')
+	content = soup.find('div',{'id': 'page-container'}).find('div',{'id': 'content'}).find('div',{'class': 'branded-page-v2-col-container'})
+	inner_content = content.find('div',{'class': 'branded-page-v2-col-container-inner'}).find('div',{'class': 'branded-page-v2-primary-col'})
+	playlist_content = inner_content.find('ul', {'id': 'browse-items-primary'}).find('div', {'id': 'pl-video-list'}).find('tbody', {'id':'pl-load-more-destination'})
+	list_videos = playlist_content.findAll('tr')
+	list_watch_urls = []
+	for tr in list_videos:
+		video = tr.find('td', {'class': 'pl-video-title'}).find('a')
+		watch_url = video['href']
+		list_watch_urls.append(watch_url)
+	activate_video = False
+	activate_playlist = True
+	for url in list_watch_urls:
+		while True:
+			download_links = get_download_links(url)
+			if download_links != None:
+				break
+		webbrowser.open_new(download_links['high_quality_video'])
 
 def download_playlist():
 	global activate_video

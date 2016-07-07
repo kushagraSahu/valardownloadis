@@ -25,5 +25,6 @@ urlpatterns = [
     url(r'^playlist/$',appviews.playlist, name='playlist'),
     url(r'^playlist/confirm/$',appviews.confirm_playlist, name='confirm-playlist'),
     url(r'^playlist/download/$', appviews.get_playlist_videos_details, name = 'download-playlist'),
+    url(r'^playlist/download/all$', appviews.download_all_videos_playlist, name = 'download-full-playlist'),
 
 ]

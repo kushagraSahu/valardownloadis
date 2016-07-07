@@ -260,7 +260,7 @@ def download_video(request):
 @require_GET
 def confirm_playlist(request):
 	if request.is_ajax():
-		search_url = request.GET.get('playlist_url')
+		search_url = request.GET.get('playlist_url','')
 		response = requests.get(search_url)
 		soup = BeautifulSoup(response.text, 'lxml')
 		content = soup.find('div',{'id': 'page-container'}).find('div',{'id': 'content'}).find('div',{'class': 'branded-page-v2-col-container'})
@@ -287,7 +287,28 @@ def confirm_playlist(request):
 @require_GET
 def get_playlist_videos_details(request):
 	search_url = request.GET.get('url','')
-	print("Playlist_url : " + search_url)
+	response = requests.get(search_url)
+	soup = BeautifulSoup(response.text, 'lxml')
+	content = soup.find('div',{'id': 'page-container'}).find('div',{'id': 'content'}).find('div',{'class': 'branded-page-v2-col-container'})
+	inner_content = content.find('div',{'class': 'branded-page-v2-col-container-inner'}).find('div',{'class': 'branded-page-v2-primary-col'})
+	playlist_content = inner_content.find('ul', {'id': 'browse-items-primary'}).find('div', {'id': 'pl-video-list'}).find('tbody', {'id':'pl-load-more-destination'})
+	list_videos = playlist_content.findAll('tr')
+	list_video_details = []
+	for tr in list_videos:
+		video_title = tr.find('td', {'class': 'pl-video-title'}).find('a').text
+		video_image = tr.find('td', {'class': 'pl-video-thumbnail'}).find('span',{'class': 'yt-thumb-default'}).find('span', {'class':'yt-thumb-clip'}).find('img')['data-thumb']
+		video_time = tr.find('td', {'class': 'pl-video-time'}).find('div', {'class': 'timestamp'}).find('span').text
+		video = {
+			'title' : video_title,
+			'image' : video_image,
+			'time' : video_time,
+		}
+		list_video_details.append(video)
+
+	context = {
+		'list_videos' : list_video_details,
+	}
+	return render(request, 'app/playlist_videos.html', context)
 
 
 def download_playlist():

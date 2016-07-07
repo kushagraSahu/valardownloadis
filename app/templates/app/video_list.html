@@ -53,9 +53,6 @@
 			font-weight: bolder;
 			color: white;
 		}
-		#footer {
-			display: none;
-		}
 		.home {
 			height: 30%;
 		}
@@ -63,60 +60,60 @@
 			.home {
 				height: 15%;
 			}
-			
-		</style>
-		<!-- <img src={% static "app/images/Elegant_Background-13.jpg" %}> -->
+		}
+	</style>
+	<!-- <img src={% static "app/images/Elegant_Background-13.jpg" %}> -->
 
-		<nav>
-			<div class="nav-wrapper">
-				<div class="col s12">
-					<a href="{% url 'home' %}" class="breadcrumb">Home</a>
-					<a href="{% url 'video' %}" class="breadcrumb">Video</a>
-					<a href="#" class="breadcrumb">Download</a>
-				</div>
-			</div>
-		</nav>
-		<div class="home">
-			<p><a href="{% url 'home' %}" style="color:white;"">VALAR DOHAERIS.</a></p>
-		</div>
-		{% if not list_videos %}
-		<p>OOPS. Connection Timed Out</p>
-		{% endif %}
-		{% for video in list_videos %}
-		<div class="row" >
-			<div class="col s12 m6 l4 offset-l4 offset-m3">
-				<div class="card">
-					<div class="card-image">
-						<img src= "{{ video.thumbnail }}">
-					</div>
-					<div class="card-content">
-						<h5>{{ video.title }} </h5>
-						<p style="font-size:20px">Duration - {{ video.time }}</p>
-						<p style="font-size:20px">Youtube views - {{ video.views }}</p>
-						<p style="font-size:20px"><a href="{{ video.watch_link }}" target="_blank">Watch on YouTube - <i class="fa fa-youtube-play" aria-hidden="true"></i></a></p>
-					</div>
-					<div class="card-action">
-						<a href="{{ video.highq_link }}" onclick="thanksToast(event)" style="justify-content:center">High Quality Download</a>
-						<a href="{{ video.lowq_link }}" onclick="thanksToast(event)" style="justify-content:center">Low Quality Download</a>
-					</div>
-				</div>
+	<nav>
+		<div class="nav-wrapper">
+			<div class="col s12">
+				<a href="{% url 'home' %}" class="breadcrumb">Home</a>
+				<a href="{% url 'video' %}" class="breadcrumb">Video</a>
+				<a href="#" class="breadcrumb">Download</a>
 			</div>
 		</div>
-		{% endfor %}
-		<div id="bg">
-			<img src="{% static "app/images/Elegant_Background-13.jpg" %}" alt="">
+	</nav>
+	<div class="home">
+		<p><a href="{% url 'home' %}" style="color:white;"">VALAR DOHAERIS.</a></p>
+	</div>
+	{% if not list_videos %}
+	<p>OOPS. Connection Timed Out</p>
+	{% endif %}
+	{% for video in list_videos %}
+	<div class="row" >
+		<div class="col s12 m6 l4 offset-l4 offset-m3">
+			<div class="card">
+				<div class="card-image">
+					<img src= "{{ video.thumbnail }}">
+				</div>
+				<div class="card-content">
+					<h5>{{ video.title }} </h5>
+					<p style="font-size:20px">Duration - {{ video.time }}</p>
+					<p style="font-size:20px">Youtube views - {{ video.views }}</p>
+					<p style="font-size:20px"><a href="{{ video.watch_link }}" target="_blank">Watch on YouTube - <i class="fa fa-youtube-play" aria-hidden="true"></i></a></p>
+				</div>
+				<div class="card-action">
+					<a href="{{ video.highq_link }}" onclick="thanksToast(event)" style="justify-content:center">High Quality Download</a>
+					<a href="{{ video.lowq_link }}" onclick="thanksToast(event)" style="justify-content:center">Low Quality Download</a>
+				</div>
+			</div>
 		</div>
-		<div id="back">
-			<a class="waves-effect waves-light btn-large" style="width:33.3%;left: 33.3%" href="javascript:history.back()">Go Back<i class="fa fa-arrow-left" aria-hidden="true"></i></a>
-		</div>
-		<script>
-			function thanksToast(e){
-				setTimeout(function(){
-					Materialize.toast('A man is now No One. Valar Downloadis ;)', 20000, 'rounded')
-				}, 2000);
-				setTimeout(function(){
-					Materialize.toast('Ready for the next kill?', 16000, 'rounded')
-				}, 4000);
-			}
-		</script>
-	</body>
+	</div>
+	{% endfor %}
+	<div id="bg">
+		<img src="{% static "app/images/Elegant_Background-13.jpg" %}" alt="">
+	</div>
+	<div id="back">
+		<a class="waves-effect waves-light btn-large" style="width:33.3%;left: 33.3%" href="javascript:history.back()">Go Back<i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+	</div>
+	<script>
+		function thanksToast(e){
+			setTimeout(function(){
+				Materialize.toast('A man is now No One. Valar Downloadis ;)', 20000, 'rounded')
+			}, 2000);
+			setTimeout(function(){
+				Materialize.toast('Ready for the next kill?', 16000, 'rounded')
+			}, 4000);
+		}
+	</script>
+</body>

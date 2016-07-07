@@ -44,7 +44,7 @@
 		nav{
 			position: fixed;
 			color: #fff;
-			background-color: rgba(149, 70, 119, 0.74);;
+			background-color: rgba(149, 70, 119, 0.74);
 			width: 100%;
 			top:0;
 			text-align: center;
@@ -55,6 +55,12 @@
 		}
 		.home {
 			height: 30%;
+		}
+		#back a{
+			background-color: rgba(149, 70, 119, 0.74);
+			font-family: "Montserrat", sans-serif;
+			font-weight: bolder;
+			color: white;
 		}
 		@media screen and (max-width: 600px) {
 			.home {
@@ -81,7 +87,7 @@
 	{% endif %}
 	{% for video in list_videos %}
 	<div class="row" >
-		<div class="col s12 m6 l4 offset-l4 offset-m3">
+		<div class="col s12 m8 l4 offset-l4 offset-m2">
 			<div class="card">
 				<div class="card-image">
 					<img src= "{{ video.thumbnail }}">
@@ -92,7 +98,7 @@
 					<p style="font-size:20px">Youtube views - {{ video.views }}</p>
 					<p style="font-size:20px"><a href="{{ video.watch_link }}" target="_blank">Watch on YouTube - <i class="fa fa-youtube-play" aria-hidden="true"></i></a></p>
 				</div>
-				<div class="card-action">
+				<div class="card-action" style="text-align:center;">
 					<a href="{{ video.highq_link }}" onclick="thanksToast(event)" style="justify-content:center">High Quality Download</a>
 					<a href="{{ video.lowq_link }}" onclick="thanksToast(event)" style="justify-content:center">Low Quality Download</a>
 				</div>

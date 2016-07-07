@@ -58,9 +58,19 @@ a {
 	flex-wrap: wrap;
 	justify-content: space-around;
 	align-items: center;
+	margin-top: 11%;
 }
 #btn {
 	font-size: 20px;
+}
+#btn a{
+	font-family: "Montserrat", sans-serif;
+	font-weight: bolder;
+	color: white;
+	background-color: rgba(156, 161, 119, 0.31);
+	height: 12%;
+    border-radius: 28px 28px;
+    line-height: 4.5;
 }
 /*Parralax*/
 #banner {

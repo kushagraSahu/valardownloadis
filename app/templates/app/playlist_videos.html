@@ -95,6 +95,9 @@
 			{% for video in list_videos %}
 			<li class="collection-item avatar" style="display: flex;justify-content:space-between;padding-left:20px" >
 				<div style="display: flex;">
+					<div style="line-height:7;margin-right:2%;">
+						{{ forloop.counter }}
+					</div>
 					<div>
 						<img src="{{ video.image }}">
 					</div>

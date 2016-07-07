@@ -24,11 +24,6 @@ global flag_stay_video
 global hit_threshold
 hit_threshold = 1
 
-activate_video = False
-activate_playlist = False
-
-
-
 #Homepage 
 def home(request):
 	return render(request, 'app/home.html')
@@ -48,7 +43,7 @@ def get_download_links(watch_url):
 	download_url = base_ss_url + watch_url
 	session2 = dryscrape.Session()
 	session2.visit(download_url)
-	time.sleep(1.5)
+	time.sleep(2)
 	response=session2.body()
 	soup = BeautifulSoup(response,"lxml")
 	sf_result = soup.find('div', {'class':'wrapper'}).find('div', {'class':'downloader-2'}).find('div',{'id':'sf_result'})
@@ -299,97 +294,52 @@ def get_playlist_videos_details(request):
 
 @require_GET
 def download_all_videos_playlist(request):
-	search_url = request.GET.get('playlist_url','')
-	response = requests.get(search_url)
-	soup = BeautifulSoup(response.text, 'lxml')
-	content = soup.find('div',{'id': 'page-container'}).find('div',{'id': 'content'}).find('div',{'class': 'branded-page-v2-col-container'})
-	inner_content = content.find('div',{'class': 'branded-page-v2-col-container-inner'}).find('div',{'class': 'branded-page-v2-primary-col'})
-	playlist_content = inner_content.find('ul', {'id': 'browse-items-primary'}).find('div', {'id': 'pl-video-list'}).find('tbody', {'id':'pl-load-more-destination'})
-	list_videos = playlist_content.findAll('tr')
-	list_watch_urls = []
-	for tr in list_videos:
-		video = tr.find('td', {'class': 'pl-video-title'}).find('a')
-		watch_url = video['href']
-		list_watch_urls.append(watch_url)
-	activate_video = False
-	activate_playlist = True
-	for url in list_watch_urls:
-		while True:
-			download_links = get_download_links(url)
-			if download_links != None:
-				break
-		webbrowser.open_new(download_links['high_quality_video'])
-
-def download_playlist():
-	global activate_video
-	global activate_playlist
-	list_watch_urls = []
-	print("Please enter the exact url of the youtube playlist. For eg- 'https://www.youtube.com/playlist?list=PL6gx4Cwl9DGBYxWxJtLi8c6PGjNKGYGZZ'")
-	search_url = input()
-	response = requests.get(search_url)
-	soup = BeautifulSoup(response.text, 'lxml')
-	content = soup.find('div',{'id': 'page-container'}).find('div',{'id': 'content'}).find('div',{'class': 'branded-page-v2-col-container'})
-	inner_content = content.find('div',{'class': 'branded-page-v2-col-container-inner'}).find('div',{'class': 'branded-page-v2-primary-col'})
-	header_content = inner_content.find('div',{'id': 'pl-header'}).find('div',{'class': 'pl-header-content'})
-	playlist_title = header_content.find('h1',{'class': 'pl-header-title'}).text
-	playlist_details = header_content.find('ul', {'class', 'pl-header-details'}).findAll('li')
-	playlist_author = playlist_details[0].text
-	playlist_video_count = int(playlist_details[1].text.split()[0])
-	playlist_views = playlist_details[2].text.split()[0]
-	print("Title:" + playlist_title)
-	print("By: " + playlist_author)
-	print("Total videos: " + str(playlist_video_count))
-	print("Youtube Views: " + playlist_views)
-	print("Is this your Playlist?\nEnter 'Y' for yes and any other key to disagree.")
-	inp = input()
-	
-	if inp == 'y' or inp == 'Y':
-		#Still to ask for choice between different video quality(720 or 360p, etc)
+	if request.is_ajax:
+		search_url = request.GET.get('playlist_url','')
+		response = requests.get(search_url)
+		soup = BeautifulSoup(response.text, 'lxml')
+		content = soup.find('div',{'id': 'page-container'}).find('div',{'id': 'content'}).find('div',{'class': 'branded-page-v2-col-container'})
+		inner_content = content.find('div',{'class': 'branded-page-v2-col-container-inner'}).find('div',{'class': 'branded-page-v2-primary-col'})
 		playlist_content = inner_content.find('ul', {'id': 'browse-items-primary'}).find('div', {'id': 'pl-video-list'}).find('tbody', {'id':'pl-load-more-destination'})
-		print("To download all the videos, Press 'A'.\nTo download only the specific videos of the playlist, Press 'S'")
 		list_videos = playlist_content.findAll('tr')
-		while True:
-			choice = input()
-			if choice == 'A' or choice == 'a':
-				all_videos = True
-				break
-			elif choice == 'S' or choice == 's':
-				index = 1
-				for tr in list_videos:
+		list_watch_urls = []
+		for tr in list_videos:
+			video = tr.find('td', {'class': 'pl-video-title'}).find('a')
+			watch_url = video['href']
+			list_watch_urls.append(watch_url)
+		for url in list_watch_urls:
+			while True:
+				download_links = get_download_links(url)
+				if download_links != None:
+					break
+			webbrowser.open_new(download_links['high_quality_video'])
 
-					video_title = tr.find('td', {'class': 'pl-video-title'}).find('a').text
-					print(str(index) + '. ' + video_title)
-					index += 1
-				print("Enter the index no. of videos you want to download specifically from the playlist(preferred in increasing order). For eg - '1 4 5 7' or '2 6 3 11'")
-				#Taking input integer no.s in a list.
-				specific_videos = input()
-				index_videos = list(map(int, specific_videos.split()))
-				break
-
-		if all_videos:
-			for tr in list_videos:
+@require_GET
+def download_partial_videos_playlist(request):
+	if request.is_ajax:
+		search_url = request.GET.get('playlist_url','')
+		index_videos = request.GET.getlist('index_videos','')
+		response = requests.get(search_url)
+		soup = BeautifulSoup(response.text, 'lxml')
+		content = soup.find('div',{'id': 'page-container'}).find('div',{'id': 'content'}).find('div',{'class': 'branded-page-v2-col-container'})
+		inner_content = content.find('div',{'class': 'branded-page-v2-col-container-inner'}).find('div',{'class': 'branded-page-v2-primary-col'})
+		playlist_content = inner_content.find('ul', {'id': 'browse-items-primary'}).find('div', {'id': 'pl-video-list'}).find('tbody', {'id':'pl-load-more-destination'})
+		list_videos = playlist_content.findAll('tr')
+		list_watch_urls = []
+		index = 1
+		for tr in list_videos:
+			#Checking whether index is in the list provided by the user.
+			if str(index) in index_videos:
 				video = tr.find('td', {'class': 'pl-video-title'}).find('a')
 				watch_url = video['href']
 				list_watch_urls.append(watch_url)
-		else:
-			index = 1
-			for tr in list_videos:
-				#Checking whether index is in the list provided by the user.
-				if index in index_videos:
-					video = tr.find('td', {'class': 'pl-video-title'}).find('a')
-					watch_url = video['href']
-					list_watch_urls.append(watch_url)
-				index += 1
+			index+=1
+		print(list_watch_urls)
 
-		activate_video = False
-		activate_playlist = True
-		
 		for url in list_watch_urls:
-			download(url, playlist_views)
-
-	else:
-		print("Please check your url again. Thanks!")
-		download_playlist()
-
-
+			while True:
+				download_links = get_download_links(url)
+				if download_links != None:
+					break
+			webbrowser.open_new(download_links['high_quality_video'])
 

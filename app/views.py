@@ -312,7 +312,7 @@ def download_all_videos_playlist(request):
 				download_links = get_download_links(url)
 				if download_links != None:
 					break
-			webbrowser.open_new(download_links['high_quality_video'])
+			webbrowser.open(download_links['high_quality_video'])
 
 @require_GET
 def download_partial_videos_playlist(request):
@@ -341,5 +341,5 @@ def download_partial_videos_playlist(request):
 				download_links = get_download_links(url)
 				if download_links != None:
 					break
-			webbrowser.open_new(download_links['high_quality_video'])
+			webbrowser.open(download_links['high_quality_video'])
 

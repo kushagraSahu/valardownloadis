@@ -48,6 +48,30 @@ var playlist = (function(){
 		})
 	}
 
+	function confirmPlaylist2(e){
+		e.preventDefault();
+		if (e.keyCode == 13){
+			playlist_search = document.getElementById('icon_prefix');
+			playlist_url = playlist_search.value;
+			$.ajax({
+				url : window.location.origin+'/playlist/confirm',
+				method : 'GET',
+				data : {
+					'playlist_url' : playlist_url, 
+				},
+				datatype : 'json',
+				success : function(response){
+					var title = response.title;
+					var author = response.author;
+					var views = response.views;
+					var videos_count = response.videos_count;
+					var playlist_image = response.playlist_image;
+					createConfirmPlaylistCard(title,author,views,videos_count,playlist_image);
+				}
+			})
+		}
+	}
+
 	function clearPage(e){
 		existing_card = document.getElementById('playlist_card')
 		if (existing_card !== null){
@@ -66,6 +90,8 @@ var playlist = (function(){
 	function init(){
 		submit_button = document.getElementById('btn')
 		submit_button.addEventListener('click', confirmPlaylist)
+		enter_input = document.getElementById('icon_prefix')
+		enter_input.addEventListener('keypress', confirmPlaylist2)
 		pl_false = document.getElementById('pl-false')
 		if (pl_false !== null){
 			pl_false.addEventListener('click', clearPage)

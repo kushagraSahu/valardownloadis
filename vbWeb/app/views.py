@@ -180,6 +180,7 @@ def download_video(request):
 						break
 			list_video_details = []
 			for i in range(0,query_range+1):
+				bool_views = False
 				video = {}
 				hit_count = 1
 				while True:
@@ -187,10 +188,14 @@ def download_video(request):
 						break
 					video_views_no_text = watch_result_list[i].find('ul', {'class': 'yt-lockup-meta-info'})
 					if video_views_no_text != None:
-						video_views = video_views_no_text.findAll('li')[1].text
+						try:
+							video_views = video_views_no_text.findAll('li')[1].text
+						except:
+							bool_views = True
 						break
 					hit_count+=1
-				if hit_count > hit_threshold:
+				if hit_count > hit_threshold or bool_views:
+					print("BC")
 					continue
 				video_views = video_views.split()[0]
 				watch_url = watch_result_list[i].find('h3', {'class': 'yt-lockup-title'}).find('a')['href']
@@ -254,7 +259,7 @@ def confirm_playlist(request):
 		playlist_video_count = int(playlist_details[1].text.split()[0])
 		playlist_views = playlist_details[2].text.split()[0]
 		playlist_image = inner_content.find('div', {'id':'pl-header'}).find('div',{'class':'pl-header-thumb'}).find('img')['src']
-		playlist_image_src = "https:" + playlist_image
+		playlist_image_src = playlist_image
 		data = {
 			'title' : str(playlist_title),
 			'author': str(playlist_author),

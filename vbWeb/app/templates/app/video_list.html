@@ -2,6 +2,7 @@
 <html>
 <head>
 	<title>Download Video</title>
+	<link rel="shortcut icon" href="{% static 'app/images/title1.png' %}" />
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
 	<link href = "https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 	<link href='https://fonts.googleapis.com/css?family=Montserrat:700' rel='stylesheet' type='text/css'>
@@ -86,7 +87,7 @@
 	<p>OOPS. Connection Timed Out</p>
 	{% endif %}
 	{% for video in list_videos %}
-	<div class="row" >
+	<div class="row">
 		<div class="col s12 m8 l4 offset-l4 offset-m2">
 			<div class="card">
 				<div class="card-image">
@@ -115,10 +116,10 @@
 	<script>
 		function thanksToast(e){
 			setTimeout(function(){
-				Materialize.toast('A man is now No One. Valar Downloadis ;)', 20000, 'rounded')
+				Materialize.toast('Valar Downloadis ;)', 20000, 'rounded')
 			}, 2000);
 			setTimeout(function(){
-				Materialize.toast('Ready for the next kill?', 16000, 'rounded')
+				Materialize.toast('Ready for the next video or Maybe a Playlist?', 16000, 'rounded')
 			}, 4000);
 		}
 	</script>

@@ -74,6 +74,12 @@ a {
 	line-height: 110px;
     border-radius: 28px 28px;
 }
+
+#footer{
+	position: fixed;
+	z-index: -1;
+}
+
 /*Parralax*/
 #banner {
 	margin-bottom: 50px;

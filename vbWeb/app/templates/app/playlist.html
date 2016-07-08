@@ -31,7 +31,7 @@
 			min-width: 50%;
 			min-height: 50%;
 		}
-		p {
+		.home p {
 			text-align: center;
 			font-size: 70px;
 			font-family: "Montserrat", sans-serif;
@@ -80,6 +80,10 @@
 			height: 8%;
 			border-radius: 28px 28px;
 		}
+		#footer {
+			position: fixed;
+			z-index: -1;
+		}
 		@media screen and (max-width: 1000px) {
 			.home{
 				height: 30%;
@@ -99,7 +103,9 @@
 		</div>
 	</nav>
 	<div class="home">
-		<p><a href="{% url 'home' %}" style="color:white;font-size:95%">VALAR SEARCHULIS.</a></p>
+		<p style="text-align: center;font-size: 70px;font-family: "Montserrat", sans-serif;font-weight: bolder;color: white;">
+			<a href="{% url 'home' %}" style="color:white;font-size:95%">VALAR SEARCHULIS.</a>
+		</p>
 	</div>
 	<div class="row" style="padding-top:4%;">
 		<form class ="input-field col m8 s12 l10 offset-l1 offset-m2" >
@@ -123,4 +129,5 @@
 
 	</script>
 </body>
+{% include 'common/footer.html' %}
 </html>

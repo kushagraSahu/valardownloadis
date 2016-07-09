@@ -3,6 +3,7 @@ bs4==0.0.1
 dj-database-url==0.4.1
 Django==1.9.7
 dryscrape==1.0
+gunicorn==19.6.0
 lxml==3.6.0
 PyMySQL==0.7.5
 requests==2.10.0

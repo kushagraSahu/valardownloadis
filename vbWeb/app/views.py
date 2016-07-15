@@ -16,6 +16,7 @@ from django.core.urlresolvers import resolve
 base_youtube_watch = 'https://www.youtube.com'
 base_yt_url = 'https://www.youtube.com/results?search_query='
 base_savedeo_url = 'https://savedeo.com/download?url='
+base_alternate_url = 'https://youtubemultidownloader.com'
 # base_ss_url = 'https://www.ssyoutube.com'
 global flag_stay_video
 
@@ -112,32 +113,52 @@ def get_download_links(watch_url):
 	print(download_url)
 	response = requests.get(download_url)
 	soup = BeautifulSoup(response.text, 'lxml')
-	table = soup.find('div',{'class':'clip'}).find('table')
-	table_body = table.find('tbody')
-	list_links = table_body.findAll('tr')
-	list_download_links = []
-	
-	i=0 
-	for link in list_links:
-		video_format = link.findAll('td')[0].text
-		if video_format == "mp4":
-			download_link = link.findAll('td')[1].find('a')['href']
-			list_download_links.append(download_link)
-		i+=1
-		if i>1:
-			break
-	
-	highq_download_url = list_download_links[0]
-	
-	if len(list_download_links) != 1:
-		lowq_download_url = list_download_links[1]
-	else:
-		lowq_download_url = highq_download_url
+	try:
+		table = soup.find('div',{'class':'clip'}).find('table')
+		table_body = table.find('tbody')
+		list_links = table_body.findAll('tr')
+		list_download_links = []
+		
+		i=0 
+		for link in list_links:
+			video_format = link.findAll('td')[0].text
+			if video_format == "mp4":
+				download_link = link.findAll('td')[1].find('a')['href']
+				list_download_links.append(download_link)
+			i+=1
+			if i>1:
+				break
+		
+		highq_download_url = list_download_links[0]
+		
+		if len(list_download_links) != 1:
+			lowq_download_url = list_download_links[1]
+		else:
+			lowq_download_url = highq_download_url
 
-	download_urls = {
-		'high_quality_video': highq_download_url,
-		'low_quality_video' : lowq_download_url
-	}
+		download_urls = {
+			'high_quality_video': highq_download_url,
+			'low_quality_video' : lowq_download_url
+		}
+	except:
+		download_url = base_alternate_url + watch_url
+		print(download_url)
+		response=requests.get(download_url)
+		soup = BeautifulSoup(response.text,"lxml")
+		result = soup.find('div',{'id':'Download_Quality'}).find('ul',{'class':'list-group'})
+		list_download_links = result.findAll('li',{'class':'list-group-item'})[1].findAll('a')
+		if list_download_links[0].text == "720P" or list_download_links[0].text == "360P":
+			highq_download_url = list_download_links[0]['href']
+		if list_download_links[1].text == "360P":
+			lowq_download_url = list_download_links[1]['href']
+		else:
+			lowq_download_url = highq_download_url
+
+		download_urls = {
+			'high_quality_video': highq_download_url,
+			'low_quality_video' : lowq_download_url
+		}
+
 	return download_urls
 
 
@@ -145,7 +166,7 @@ def get_download_links(watch_url):
 def download_video(request):
 	global hit_threshold
 	abort_override = False
-	query_range = 4
+	query_range = 3
 	refresh_search_range = 2
 	search = request.GET.get('search', '')
 	if search:
@@ -157,26 +178,21 @@ def download_video(request):
 			watch_result_list = []
 			i=0
 			for result in list_results:
-				print(i)
 				if result.find('div', {'class': 'pyv-afc-ads-container'}):
 					continue
 				elif result.find('div', {'class': re.compile(r'yt-lockup-channel')}) != None:
-					print("playlist")
 					continue
 				elif result.find('div', {'class': re.compile(r'yt-lockup-playlist')}) != None:
-					print("Channel")
 					continue
 				else:
 					hit_count = 1
 					while True:
-						print(hit_count)
 						if hit_count > hit_threshold:
 							abort_override = True
 							break
 						watch_result = result.find('div', {'class': "yt-lockup-content"})
 						if watch_result != None:
 							i+=1
-							print(watch_result)
 							watch_result_list.append(watch_result)
 							break
 						hit_count += 1
@@ -192,10 +208,9 @@ def download_video(request):
 				if result.find('div', {'class': 'pyv-afc-ads-container'}):
 					continue
 				elif result.find('div', {'class': re.compile(r'yt-lockup-channel')}) != None:
-					print("Channel")
 					continue
 				elif result.find('div', {'class': re.compile(r'yt-lockup-playlist')}) != None:
-					print("Playlist")
+					continue
 				else:
 					hit_count = 1
 					while True:

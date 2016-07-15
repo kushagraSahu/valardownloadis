@@ -2,7 +2,7 @@ var playlistDownload = (function(){
 	var playlist_url = "";
 	function downloadAll(e){
 		e.preventDefault();
-		setTimeout(function(){Materialize.toast('Starting download in a moment :)', 20000, 'rounded')},2000);
+		setTimeout(function(){Materialize.toast('Starting download in a moment :)', 20000, 'rounded')},3000);
 		setTimeout(function(){Materialize.toast('Enjoy your videos :)', 20000, 'rounded')},24000);
 		$.ajax({
 			url : window.location.origin + "/playlist/download/all",

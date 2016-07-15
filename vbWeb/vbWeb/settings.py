@@ -88,6 +88,13 @@ WSGI_APPLICATION = 'vbWeb.wsgi.application'
 #     }
 # }
 
+DATABASES = { 
+    'default': 
+        { 
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, ''),
+        } 
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
